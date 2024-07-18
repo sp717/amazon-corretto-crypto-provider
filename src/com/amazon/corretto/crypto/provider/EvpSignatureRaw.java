@@ -109,9 +109,9 @@ class EvpSignatureRaw extends EvpSignatureBase {
     }
   }
 
-//  static final class Ed25519 extends EvpSignatureRaw {
-//    Ed25519(AmazonCorrettoCryptoProvider provider) {
-//      super(provider, EvpKeyType.Ed25519, 0);
-//    }
-//  }
+  //  static final class Ed25519 extends EvpSignatureRaw {
+  //    Ed25519(AmazonCorrettoCryptoProvider provider) {
+  //      super(provider, EvpKeyType.Ed25519, 0);
+  //    }
+  //  }
 }

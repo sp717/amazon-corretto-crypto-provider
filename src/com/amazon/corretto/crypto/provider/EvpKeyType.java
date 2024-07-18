@@ -8,8 +8,8 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.interfaces.EdECPrivateKey;
-import java.security.interfaces.EdECPublicKey;
+import java.security.interfaces.EdECKey;
+// import java.security.interfaces.EdECPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.EnumSet;
@@ -20,7 +20,7 @@ import java.util.Map;
 enum EvpKeyType {
   RSA("RSA", 6, RSAPublicKey.class, RSAPrivateKey.class),
   EC("EC", 408, ECPublicKey.class, ECPrivateKey.class),
-  Ed25519("Ed25519", 949, ECPublicKey.class, ECPrivateKey.class);
+  Ed25519("Ed25519", 949, EdECKey.class, EdECKey.class);
 
   final String jceName;
   final int nativeValue;
