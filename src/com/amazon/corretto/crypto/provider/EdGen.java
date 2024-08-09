@@ -19,7 +19,13 @@ class EdGen extends KeyPairGeneratorSpi {
 
   public void initialize(int keysize, SecureRandom random) {
     // Has some behavior in Java, but throws error as placeholder for now.
-    throw new UnsupportedOperationException();
+    if (keysize != 255) {
+      throw new UnsupportedOperationException("Params must be Ed25519.");
+    }
+    if (random != null) {
+      throw new UnsupportedOperationException("Custom RNG is not supported.");
+    }
+    return;
   }
 
   @Override

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.*;
 import java.security.SignatureException;
+import java.security.InvalidParameterException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -64,6 +65,37 @@ public class EdDSATest {
 
     assertTrue(!Arrays.equals(pk1, pk2));
     assertTrue(!Arrays.equals(pbk1, pbk2));
+  }
+
+  @Test
+  public void initializeTest() {
+    // Testing JCE keyPairGenerator initialize behavior
+    jceGen.initialize(255, null);
+    // Above works, Below throws error since kpg was set up as Ed25519 --> need
+    // to initialize with corresponding size of 255 not 448
+    TestUtil.assertThrows(InvalidParameterException.class, () -> jceGen.initialize(448, null));
+
+    // Confirming ACCP keyPairGenerator behaves the same
+    nativeGen.initialize(255, null);
+    TestUtil.assertThrows(InvalidParameterException.class, () -> jceGen.initialize(448, null));
+  }
+
+  @Test
+  public void recreateBenchmark() throws GeneralSecurityException{
+    byte[] message = new byte[1024];
+    final KeyPairGenerator kpg = KeyPairGenerator.getInstance("Ed25519", NATIVE_PROVIDER);
+    KeyPair keyPair = kpg.generateKeyPair();
+    Signature signer = Signature.getInstance("Ed25519", NATIVE_PROVIDER);
+    Signature verifier = Signature.getInstance("Ed25519", NATIVE_PROVIDER);
+    signer.initSign(keyPair.getPrivate());
+    verifier.initVerify(keyPair.getPublic());
+    new SecureRandom().nextBytes(message);
+    signer.update(message);
+    byte[] signature = signer.sign();
+    verifier.update(message);
+    assert verifier.verify(signature);
+    verifier.update(message);
+    assert verifier.verify(signature);
   }
 
   @Test
