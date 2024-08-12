@@ -93,9 +93,11 @@ public class EdDSATest {
     signer.update(message);
     byte[] signature = signer.sign();
     verifier.update(message);
-    assert verifier.verify(signature);
+    assertTrue(verifier.verify(signature));
     verifier.update(message);
-    assert verifier.verify(signature);
+    assertTrue(verifier.verify(signature));
+    verifier.update(new byte[1024]);
+    TestUtil.assertThrows(SignatureException.class, () -> verifier.verify(signature));
   }
 
   @Test

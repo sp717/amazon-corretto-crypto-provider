@@ -40,7 +40,9 @@ public class SignatureBase {
     signer.update(message);
     signature = signer.sign();
     verifier.update(message);
-    assert verifier.verify(signature);
+    if (!verifier.verify(signature)) {
+      throw new RuntimeException("Verification failed in setup.");
+    }
   }
 
   protected byte[] sign() throws Exception {
