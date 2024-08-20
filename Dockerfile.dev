@@ -19,9 +19,9 @@ RUN apt-get update \
 RUN curl -s https://apt.corretto.aws/corretto.key | apt-key add - \
     && echo 'deb https://apt.corretto.aws stable main' | tee /etc/apt/sources.list.d/corretto.list
 RUN apt-get update \
-    && apt-get install -y java-11-amazon-corretto-jdk
-ENV JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto/
-RUN echo 'export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto/' >> /home/.bashrc
+    && apt-get install -y java-17-amazon-corretto-jdk
+ENV JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto/
+RUN echo 'export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto/' >> /home/.bashrc
 
 # required dependencies for building/testing
 RUN apt-get install -y build-essential \
@@ -46,7 +46,12 @@ RUN mkdir /accp
 COPY . /accp
 WORKDIR /accp
 
-# run the gradlew script just to install gradle in the image
 RUN ./gradlew --no-daemon generateEclipseClasspath
+
+# run the gradlew script just to install gradle in the image
+# RUN ./gradlew release
+
+# RUN javac -cp ./build/lib/AmazonCorrettoCryptoProvider.jar EdDemo.java
+# RUN java -cp .:./build/lib/AmazonCorrettoCryptoProvider.jar EdDemo 2>/dev/null
 
 ENTRYPOINT /bin/bash
